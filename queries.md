@@ -26,12 +26,31 @@
 
 ## add a customer record for _"The Shire"_, the contact name is _"Bilbo Baggins"_ the address is _"1 Hobbit-Hole"_ in _"Bag End"_, postal code _"111"_ and the country is _"Middle Earth"_.
 
+    INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country)
+    VALUES ('The Shire','Bilbo Baggins','1 Hobbit-Hole','Bag End','111','Middle Earth');
+
 ## update _Bilbo Baggins_ record so that the postal code changes to _"11122"_.
+
+    update customers set postalCode = '11122' where contactName = 'Bilbo Baggins'
 
 ## list orders grouped by customer showing the number of orders per customer. _Rattlesnake Canyon Grocery_ should have 7 orders.
 
+    select * from orders order by customerID asc
+
 ## list customers names and the number of orders per customer. Sort the list by number of orders in descending order. _Ernst Handel_ should be at the top with 10 orders followed by _QUICK-Stop_, _Rattlesnake Canyon Grocery_ and _Wartian Herkku_ with 7 orders each.
+
+    select count(orderID), customerName from orders
+    join customers on orders.customerId = customers.customerId
+    group by customerName
+    order by count(orderId) desc
 
 ## list orders grouped by customer's city showing number of orders per city. Returns 58 Records with _Aachen_ showing 2 orders and _Albuquerque_ showing 7 orders.
 
+    select city, count(orderID) from orders
+    join customers on customers.customerId = orders.customerId
+    group by city
+
 ## delete all users that have no orders. Should delete 17 (or 18 if you haven't deleted the record added) records.
+
+    delete from customers
+    where not exists(select orderId from orders where customerId = customers.customerId)
